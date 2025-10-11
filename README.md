@@ -5,7 +5,7 @@ Predict Ames house sale prices with a clean scikit-learn pipeline and **OOF-vali
 - **Competition:** Kaggle — *House Prices: Advanced Regression* (**RMSLE**)  
 - **Validation:** RepeatedKFold **5×3** (shuffle=True, seed=42)  
 - **Target transform:** `log1p` / `expm1` via `TransformedTargetRegressor`  
-- **Best OOF:** **RMSLE = 0.1181** with a **blend** of **SVR (45%) + GBR (55%)**  
+- **Best OOF:** **RMSLE = 0.11909** with a **blend** of **SVR (45%) + GBR (55%)**  
 - **Public LB:** ~**125** (Top-150)
 
 _Notebooks:_  
@@ -36,7 +36,7 @@ _Notebooks:_
     # macOS/Linux: source venv/bin/activate
     pip install -r requirements.txt
 
-Download Kaggle `train.csv` / `test.csv` to `datasets/`.
+Download Kaggle `train.csv` / `test.csv` to `datasets/`. Or use data_loading function from src/data_access (requires Kaggle api)
 
 Run notebooks in order:
 
@@ -50,21 +50,9 @@ Run notebooks in order:
 |-------------------|---------|
 | SVR               | 0.12165 |
 | Gradient Boosting | 0.12047 |
-| Blend (45/55)     | 0.11810 |
+| Blend (45/55)     | 0.11909 |
 
 ---
-
-## Optional: Add Plot Images
-
-In your plotting cells (before `plt.show()`):
-
-    from pathlib import Path
-    Path("images").mkdir(exist_ok=True)
-    plt.savefig("images/learning_gbr.png", dpi=150, bbox_inches="tight")
-
-Then reference in this README:
-
-    ![Learning curve — GBR](images/learning_gbr.png)
 
 Notes
 
