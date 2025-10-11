@@ -54,6 +54,14 @@ Run notebooks in order:
 
 ---
 
+Next Steps: 
+
+Try LightGBM/CatBoost and a simple stacking meta (ridge).
+
+Stress-test with GroupKFold by Neighborhood to gauge generalization.
+
+Expand features (e.g., neighborhood medians, age×grade, porch flags).
+
 Notes
 
 Pipelines are leakage-safe, target modeled in log-space to match RMSLE. 
