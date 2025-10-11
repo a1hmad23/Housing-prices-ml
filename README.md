@@ -1,49 +1,76 @@
-# 🏠 Housing Prices Prediction
+# House Prices (Ames) — Minimal, Reproducible ML
 
-This project is based on the [Kaggle Housing Prices competition](https://www.kaggle.com/competitions/home-data-for-ml-course).  
-The goal is to build machine learning models that predict house sale prices from property features.  
-It serves as a **learning exercise** and a **portfolio project** showcasing clean project structure, reproducible environments, and a basic ML pipeline.
+Predict Ames house sale prices with a clean scikit-learn pipeline and **OOF-validated blending**.
 
----
+- **Competition:** Kaggle — *House Prices: Advanced Regression* (**RMSLE**)  
+- **Validation:** RepeatedKFold **5×3** (shuffle=True, seed=42)  
+- **Target transform:** `log1p` / `expm1` via `TransformedTargetRegressor`  
+- **Best OOF:** **RMSLE = 0.1181** with a **blend** of **SVR (45%) + GBR (55%)**  
+- **Public LB:** ~**125** (Top-150)
 
-## 📂 Project Structure
-
-[A[A[C[C[C[C[[A[A[A[A[A[A[A[A[A[A[A[A[A[B[[B[B[B[B[B[B[B[B[B[B[B[B[B[A[D[D[D[B├── data/ # (optional, large/raw data kept locally; ignored by git)
-├── datasets/ # Kaggle train/test CSVs (ignored by git)
-├── notebooks/ # Jupyter notebooks (EDA, experiments)
-├── src/ # Reusable scripts (data loading, preprocessing, models)
-├── models/ # Saved trained models (e.g., .pkl, .joblib)
-├── reports/ # Generated visuals & final report
-├── README.md # Project description (this file)
-├── requirements.txt # Python dependencies
-└── venv/ # Virtual environment (ignored by git)
-
-
-> Tip: Add an empty `src/__init__.py` so `src` acts as a package and you can import like `from src.data_loader import load_data`.
+_Notebooks:_  
+• [notebooks/01_eda.ipynb](notebooks/01_eda.ipynb)  
+• [notebooks/02_preprocessing.ipynb](notebooks/02_preprocessing.ipynb) — pipeline, tuning, OOF, blend, save models, submission
 
 ---
 
-## ⚙️ Setup
+## Project Structure
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/<your-username>/housing-prices.git
-   cd housing-prices
+    .
+    ├─ datasets/           # Kaggle CSVs (not in git)
+    ├─ models/             # saved models, weights, submissions (gitignored)
+    ├─ notebooks/          # 01_eda, 02_preprocessing
+    ├─ src/
+    │   ├─ config.py       # column groups, engineered features
+    │   └─ data_access.py  # (optional) data helper
+    ├─ images/             # exported plots (optional)
+    ├─ requirements.txt
+    └─ README.md
 
-2. [A[A[A[A[A[A[A[[B[B[B[B[B[B[B**Create and activate a virtual environment**
-   python -m venv venv
+---
 
-   source venv/Scripts/activate
+## Quick Start
 
-3. **Install dependencies**
-[A[B[B[D[D[D[Dpip install -r requirements.txt
+    python -m venv venv
+    # Windows: venv\Scripts\activate
+    # macOS/Linux: source venv/bin/activate
+    pip install -r requirements.txt
 
-4. **Launch Jupyter Lab**
-   jupyter lab
+Download Kaggle `train.csv` / `test.csv` to `datasets/`.
 
-## Data
-   - The project includes a helper function (load_data()) that automatically downloads the Kaggle competition data (train/test) into the datasets/ folder if not already present. You’ll need a Kaggle account and API credentials set up (see Kaggle API docs
-).
+Run notebooks in order:
 
-## Usage
-[A[C[C[C[C[C**Author: Muhammad Ahmad**
+1. `01_eda.ipynb`  
+2. `02_preprocessing.ipynb` → computes OOF, learns blend weight, saves models and writes submission to:  
+       models/<timestamp>_blend_rmsle/submission.csv
+
+### Results (OOF, RMSLE)
+
+| Model             | RMSLE   |
+|-------------------|---------|
+| SVR               | 0.12165 |
+| Gradient Boosting | 0.12047 |
+| Blend (45/55)     | 0.11810 |
+
+---
+
+## Optional: Add Plot Images
+
+In your plotting cells (before `plt.show()`):
+
+    from pathlib import Path
+    Path("images").mkdir(exist_ok=True)
+    plt.savefig("images/learning_gbr.png", dpi=150, bbox_inches="tight")
+
+Then reference in this README:
+
+    ![Learning curve — GBR](images/learning_gbr.png)
+
+Notes
+
+Pipelines are leakage-safe, target modeled in log-space to match RMSLE. 
+Final predictions are clipped at 0 to avoid negative inputs to log1p. 
+Models and weights are saved under models/<timestamp>_blend_rmsle/. 
+
+Acknowledgments: Kaggle House Prices – Advanced Regression Techniques. 
+Built with scikit-learn, numpy, pandas, matplotlib.
