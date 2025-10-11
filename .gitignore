@@ -4,3 +4,18 @@ __pycache__/
 datasets/
 models/
 *.log
+
+# --- Models & artifacts ---
+models/
+*.joblib
+*.pkl
+*.onnx
+*.bin
+*.pt
+*.h5
+submission.csv
+
+# --- Caching ---
+.cache/
+.joblib/
+**/pipeline_cache/
